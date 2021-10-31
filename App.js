@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Tabs from './src/components/Tabs/Tabs';
@@ -15,7 +14,7 @@ export default function App() {
       <Stack.Navigator
       screenOptions={{headerShown: false}}
       >
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Login" component={Tabs} />
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="SignUp" component={SignUp} />
       </Stack.Navigator>

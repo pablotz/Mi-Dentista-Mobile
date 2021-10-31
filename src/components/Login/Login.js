@@ -41,7 +41,7 @@ const Login = ({navigation}) => {
               </Typography>
 
               <Typography style={styles.register} size={18} bold={false} onPress={()=>navigation.navigate('SignUp')}>
-                soy nuevo aquí quiero registarme
+                soy nuevo aquí quiero <Typography bold={true} size={18}>registrarme</Typography>
               </Typography>
           </View>
             <SafeAreaView style={styles.inputs}>

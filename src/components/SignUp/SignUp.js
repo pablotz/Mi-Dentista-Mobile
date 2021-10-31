@@ -51,12 +51,15 @@ const SignUp = ({navigation}) => {
               <Input value={password} onChangeText={setPassword} secureTextEntry={true} style={styles.pass} placeholder="Ingresa una contraseña"></Input>
               <Input value={conPassword} onChangeText={setConPassword} secureTextEntry={true} style={styles.pass} placeholder="Confirmar contraseña"></Input>
 
-              <Typography style={styles.register} size={16} bold={true}>
-              <CheckBox 
-              value={terms}
-              onValueChange={handleTerms}
-              style={styles.checkBox}/> Acepto los terminos y condiciones de uso
-              </Typography>
+              <View style={styles.checkView}>
+                <CheckBox 
+                value={terms}
+                onValueChange={handleTerms}
+                style={styles.checkBox}/>
+                <Typography style={styles.register} size={16} bold={true}>
+                Acepto los terminos y condiciones de uso
+                </Typography>
+              </View>
 
               <Button disable={true} onPress={() => sendUser()} tyle={styles.buttonRegister}>Registrarse</Button>
             </SafeAreaView>     
@@ -80,7 +83,13 @@ const styles = StyleSheet.create({
     },
 
     checkBox: {
-        
+       marginTop: 25
+    },
+
+    checkView: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 30
     },
 
     user: {
