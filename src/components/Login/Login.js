@@ -1,14 +1,17 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { View, Text, StyleSheet, TextInput, SafeAreaView, ToastAndroid } from 'react-native'
 import Button from '../Atoms/Button';
 import Input from '../Atoms/Input';
 import Singup_user from '../../service/singup';
 import Typography from '../Atoms/Typography';
+import { AuthContext } from '../Context/context';
 
 const Login = ({navigation}) => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const { signIn } = useContext(AuthContext);
 
   const sendData = async () => {
     const user = {
@@ -30,18 +33,22 @@ const Login = ({navigation}) => {
     }
   }
 
+  const loginHandle = (email, password) => {
+    signIn(email, password)
+  }
+
     return (
         <View style={styles.container}>
           <View style={styles.welcome}>
-              <Typography size={56}>
+              <Typography size={56} style={styles.title}>
                 Bienvenido!
               </Typography>
-              <Typography size={38} bold={true}>
+              <Typography size={38} bold={true} style={styles.title}>
                 Inicia sesión.
               </Typography>
 
               <Typography style={styles.register} size={18} bold={false} onPress={()=>navigation.navigate('SignUp')}>
-                soy nuevo aquí quiero <Typography bold={true} size={18}>registrarme</Typography>
+                Soy nuevo aquí quiero <Typography bold={true} size={18}>registrarme</Typography>
               </Typography>
           </View>
             <SafeAreaView style={styles.inputs}>
@@ -51,7 +58,7 @@ const Login = ({navigation}) => {
                 ¿olvidaste tu contraseña? entra aquí
               </Typography>
 
-              <Button style={styles.buttonLogin} onPress={() => sendData()}>Iniciar sesión</Button>
+              <Button style={styles.buttonLogin} onPress={() => loginHandle(email, password)}>Iniciar sesión</Button>
             </SafeAreaView>     
         </View>
     )
@@ -69,17 +76,22 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
 
+    title: {
+      color: '#000'
+    },
+
 
     welcome: {
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
     },
 
     register: {
-      marginTop: 30
+      marginTop: 30,
+      color: '#000'
     },
 
     user: {
-      marginTop: 30
+      marginTop: 30,
     },
 
     pass: {

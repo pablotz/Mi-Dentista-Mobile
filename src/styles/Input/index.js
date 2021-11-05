@@ -6,10 +6,10 @@ const TextInput = styled.TextInput`
     width: 295px;
     font-size: 18px;
     padding: 10px;
-    background-color: #f0f0f0;
+    background-color: #E3E3E3;
     border-radius: 15px;
     font-family: 'Poppins-Regular';
-    color: #222;
+    color: #353535;
 `
 
 export {
