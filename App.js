@@ -52,7 +52,7 @@ export default function App() {
       }
 
       let response = await Singup_user.login(user)
-      console.log(response)
+      
       if(response.status === true){
         try {
           userToken = response.token;
@@ -105,7 +105,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={authContext}>
     <NavigationContainer>
-      {loginState.userToken ? <AuthStack/> : <LoginStack />}
+      {!loginState.userToken ? <AuthStack/> : <LoginStack />}
     </NavigationContainer>
     </AuthContext.Provider>
   );

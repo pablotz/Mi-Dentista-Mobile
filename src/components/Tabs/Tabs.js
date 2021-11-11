@@ -2,7 +2,8 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, StyleSheet, TextInput, SafeAreaView, CheckBox, Image } from 'react-native'
 import Profile from '../Profile/Profile';
-
+import Service from '../Service';
+import Appointment from '../Appointment/Appointment';
 
 const Tab = createBottomTabNavigator();
 
@@ -39,26 +40,25 @@ const Tabs = () => {
         screenOptions={({ route }) => (tabOptions)}
 
         >
-            <Tab.Screen name="Home" component={Home}
+            
+            <Tab.Screen name="Agendar cita" component={Appointment} 
             options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                       <Image source={require('../../Assets/icons/home.png')} 
-                       style={{ 
-                           width: ICON_WIDTH, 
-                           height: ICON_HEIGHT,
-                           tintColor: focused ? ICON_COLOR_FOCUS : ICON_COLOR_NEUTRAL,
-                           opacity: focused ? 1 : 0.8,
+                        <Image source={require('../../Assets/icons/calendar.png')} 
+                        style={{ 
+                            width: ICON_WIDTH, 
+                            height: ICON_HEIGHT,
+                            tintColor: focused ? ICON_COLOR_FOCUS : ICON_COLOR_NEUTRAL,
+                            opacity: focused ? 1 : 0.8,
 
                         }} 
-                       />
-                       <Text style={ focused ? styles.tabLabel_focused :  styles.tabLabel_neutral}>Inicio</Text>
-
+                        />
+                        <Text style={ focused ? styles.tabLabel_focused :  styles.tabLabel_neutral}>Citas</Text>
                     </View>
                 ),
-            }}
-            />
-            <Tab.Screen name="Servicios" component={Home} 
+            }}/>
+            <Tab.Screen name="Servicios" component={Service} 
             options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -76,23 +76,6 @@ const Tabs = () => {
                 ),
             }}/>
             
-            <Tab.Screen name="Agendar cita" component={Home} 
-            options={{
-                tabBarIcon: ({ focused }) => (
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <Image source={require('../../Assets/icons/calendar.png')} 
-                        style={{ 
-                            width: ICON_WIDTH, 
-                            height: ICON_HEIGHT,
-                            tintColor: focused ? ICON_COLOR_FOCUS : ICON_COLOR_NEUTRAL,
-                            opacity: focused ? 1 : 0.8,
-
-                        }} 
-                        />
-                        <Text style={ focused ? styles.tabLabel_focused :  styles.tabLabel_neutral}>Citas</Text>
-                    </View>
-                ),
-            }}/>
             <Tab.Screen name="Perfil" component={Profile} 
             options={{
                 tabBarIcon: ({ focused }) => (

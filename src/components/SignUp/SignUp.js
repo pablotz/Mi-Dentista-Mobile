@@ -5,6 +5,10 @@ import Input from '../Atoms/Input';
 import Singup_user from '../../service/singup';
 import CheckBox from '@react-native-community/checkbox'
 import { View, Text, StyleSheet, TextInput, SafeAreaView} from 'react-native'
+import IconButton from '../Atoms/ButtonIcon/IconButton';
+import {LeftArrow} from '../Atoms/Icons'
+
+
 
 const SignUp = ({navigation}) => {
 
@@ -40,9 +44,16 @@ const SignUp = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Typography size={46} bold={true} style={styles.registerTitle}>
-                Regístrate
-            </Typography>
+            <View style={styles.header}>
+              <IconButton onPress={() =>  navigation.navigate('Login')}
+                icon={<LeftArrow height="24" width="24" color='#787878'/>}
+              />
+              <View style={styles.header_title_container}>
+                <Typography size={46} bold={true} style={styles.header_title}>
+                    Regístrate
+                </Typography>
+              </View>
+            </View>
 
             <SafeAreaView style={styles.inputs}>
               <Input value={name} onChangeText={setName} style={styles.user} placeholder="Nombre/s"></Input>
@@ -73,6 +84,21 @@ const styles = StyleSheet.create({
       margin: 20,
       justifyContent: 'center',
     },
+
+    header: {
+      width: '100%',
+      paddingLeft: 20,        
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+  },
+
+    header_title_container: {
+      width: '100%',
+      flexDirection: 'row',
+      paddingLeft: 20,      
+      justifyContent: 'flex-start',
+    },   
 
     inputs: {
       alignItems: 'center',
