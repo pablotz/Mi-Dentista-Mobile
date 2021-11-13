@@ -8,13 +8,12 @@ import Input from '../Atoms/Input';
 import {Trash} from '../Atoms/Icons';
 import EventCalendar from 'react-native-events-calendar'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Root, Popup } from 'popup-ui'
+import { Root, Popup } from 'react-native-popup-confirm-toast'
 
-const Appointment = () => {
+
+const Appointment = ({navigation}) => {
 
     const [nowDate, setNowDate] = useState(null)
-    const [initDate, setInitDate] = useState(null)
-    const [timer, setTimer] = useState(null)
 
     const getDate = () => {
         var meses = new Array ("ene.","feb.","mar.","abr.","may.","jun.","jul.","ago.","sep.","oct.","nov.","dic.");
@@ -23,6 +22,17 @@ const Appointment = () => {
     }
     
     let { width } = Dimensions.get('window')
+    const popup = Popup;
+
+    const bodyComponent = (props) => {
+      return <View style={styles.modal}>
+              <Button onPress={() => popup.hide()}>Confirmar</Button>
+            </View>
+      }
+    
+    const goToAppointment = () => {
+        navigation.navigate('makeAppointment')
+    }
 
     const events = [
         { color:'#98EFD3', start: '2021-11-05 12:30:00', end: '2021-11-05 18:30:00', title: 'Limpieza bucal con el doctor', summary: '3412 Piedmont Rd NE, GA 3032'},
@@ -48,6 +58,8 @@ const Appointment = () => {
     return (
       <Root>
         <SafeAreaView style={styles.container}>
+
+
             <View style={styles.header}>
               <View style={styles.header_title_container}>
                 <Typography size={46} bold={true} style={styles.header_title}>
@@ -66,7 +78,7 @@ const Appointment = () => {
               marginTop: -30,
               alignItems: 'center',
               width: '100%',}}>
-                <Button>Crear nueva cita</Button>
+                <Button onPress={() => goToAppointment()}>Crear nueva cita</Button>
               </View>  
               </View>
 
@@ -85,18 +97,13 @@ const Appointment = () => {
                     }} placeholder="2 feb 2022 a las 12:30 AM" editable={false}></Input>
                     <IconButton style={{backgroundColor: '#EB4840'}}
                     icon={<Trash height="35" width="35" color='#fff'/>}
-                    onPress={() =>
-                      Popup.show({
-                        type: 'Warning',
-                        title: 'Cancelar cita',
-                        button: true,
-                        textBody: "¿Seguro de cancelar?",
-                        autoclose: true,
-                        timing: 3000,
-                        buttontext: 'Ok',
-                        callback: () => Popup.hide()
-                      }) 
-                      }
+                    onPress={() => popup.show({
+                      type: 'confirm',
+                      textBody: 'Se cancelara la cita',
+                      bodyComponent: () => bodyComponent({popup}),
+                      confirmText: 'Regresar',
+                      buttonEnabled: false,
+                  })}
                     />
 
                 </View>   
@@ -158,6 +165,7 @@ const styles = StyleSheet.create({
     module_calendar: {
         display: 'flex',
       },
+    
 
     nextVist: {
         display: 'flex',

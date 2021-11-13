@@ -12,6 +12,9 @@ export default class Signup_user {
                 lastName: usuario.lastName,
                 email: usuario.email,
                 password: usuario.password,
+                access_code: usuario.accessCode,
+                phone: usuario.phone,
+                role: 'customer'
             }),
            }
        ).then(response => response.json())

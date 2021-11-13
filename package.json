@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@expo-google-fonts/roboto": "^0.2.0",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/checkbox": "^0.5.9",
     "@react-navigation/bottom-tabs": "^6.0.9",
@@ -21,9 +22,14 @@
     "react-native-awesome-loading": "^1.0.15",
     "react-native-events-calendar": "git+https://github.com/joshjhargreaves/react-native-event-calendar.git",
     "react-native-fast-image": "^8.5.11",
+    "react-native-gesture-handler": "^1.10.3",
     "react-native-lightning-modal": "^2.0.1",
+    "react-native-modal": "^13.0.0",
+    "react-native-neat-date-picker": "^1.1.2",
+    "react-native-popup-confirm-toast": "^2.0.3",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.9.0",
+    "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^12.1.1",
     "react-native-svg-transformer": "^0.14.3",
     "styled-components": "^5.3.3"

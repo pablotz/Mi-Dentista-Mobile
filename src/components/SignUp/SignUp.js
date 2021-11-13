@@ -17,6 +17,8 @@ const SignUp = ({navigation}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [conPassword, setConPassword] = useState("")
+    const [accessCode, setAccessCode] = useState("")
+    const [phone, setPhone] = useState("")
     const [terms, setTerms] = useState(false)
 
     const handleTerms = () => {
@@ -32,11 +34,12 @@ const SignUp = ({navigation}) => {
         lastName,
         email,
         password,
-        conPassword
+        phone,
+        accessCode
       }
       let response = await Singup_user.addUser(user)
 
-      console.log(response.status)
+      console.log(response)
       if(response.status === "OK"){
         navigation.navigate('Login')
       }
@@ -59,8 +62,9 @@ const SignUp = ({navigation}) => {
               <Input value={name} onChangeText={setName} style={styles.user} placeholder="Nombre/s"></Input>
               <Input value={lastName} onChangeText={setLastName} style={styles.user} placeholder="Apellidos"></Input>
               <Input value={email} onChangeText={setEmail} style={styles.user} placeholder="Correo electronico"></Input>
+              <Input value={phone} onChangeText={setPhone} style={styles.user} placeholder="Número de teléfono"></Input>
               <Input value={password} onChangeText={setPassword} secureTextEntry={true} style={styles.pass} placeholder="Ingresa una contraseña"></Input>
-              <Input value={conPassword} onChangeText={setConPassword} secureTextEntry={true} style={styles.pass} placeholder="Confirmar contraseña"></Input>
+              <Input value={accessCode} onChangeText={setAccessCode} secureTextEntry={false} style={styles.pass} placeholder="Código de acceso"></Input>
 
               <View style={styles.checkView}>
                 <CheckBox 
