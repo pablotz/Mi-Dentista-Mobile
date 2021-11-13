@@ -5,6 +5,7 @@ import Search from './Search';
 import Trash from './Trash';
 import Calendar from './Calendar';
 import Tooth from './Tooth';
+import Info from './Info';
 
 export {
     LeftArrow,
@@ -13,5 +14,6 @@ export {
     Search,
     Trash,
     Calendar,
-    Tooth  
+    Tooth,
+    Info
 }

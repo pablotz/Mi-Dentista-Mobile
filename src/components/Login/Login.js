@@ -54,9 +54,6 @@ const Login = ({navigation}) => {
             <SafeAreaView style={styles.inputs}>
               <Input style={styles.user} value={email} onChangeText={setEmail} placeholder="Correo" />
               <Input secureTextEntry={true} value={password} onChangeText={setPassword} style={styles.pass} placeholder="Contraseña" />
-              <Typography style={styles.register} size={18} bold={true}>
-                ¿olvidaste tu contraseña? entra aquí
-              </Typography>
 
               <Button style={styles.buttonLogin} onPress={() => loginHandle(email, password)}>Iniciar sesión</Button>
             </SafeAreaView>     

@@ -8,8 +8,7 @@ const DEF_COLOR_FONT = '#787878';
 const ButtonTouch = styled.TouchableOpacity` 
     height: 50px;
     width: 325px;
-    background-color: #1BD15D;
-    
+    background-color: #E3E3E3;
     border-radius: 15px;
     margin-top: 50px
     justify-content: space-evenly;
@@ -19,10 +18,10 @@ const ButtonTouch = styled.TouchableOpacity`
 `
 
 const Text = styled.Text` 
-    font-family: 'Poppins-ExtraBold';
+    font-family: 'Roboto-Medium';
     font-size: 17px;
     text-align: center;
-    color: #fff;
+    color: #353535;
 `
 
 const IconStyle = ` 

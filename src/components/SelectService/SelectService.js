@@ -1,12 +1,13 @@
 import React from 'react'
 import {View, StyleSheet, ScrollView} from 'react-native'
-import Typography from '../Atoms/Typography'
 import {LeftArrow, Calendar, Tooth} from '../Atoms/Icons'
 import IconButton from '../Atoms/ButtonIcon/IconButton';
+import ServiceItem from '../ServiceItem/ServiceItem';
+import Typography from '../Atoms/Typography'
 
 
 
-const SelectService = ({navigation}) => {
+const SelectService = ({navigation, route}) => {
 
     const dummyData = [
         {
@@ -66,6 +67,8 @@ const SelectService = ({navigation}) => {
         
     ]
 
+    const {setSlctService} = route.params;
+
     return (
         <ScrollView contentContainerStyle={styles.cards_container}>
 
@@ -74,8 +77,8 @@ const SelectService = ({navigation}) => {
                 icon={<LeftArrow height="24" width="24" color='#787878'/>}
               />
               <View style={styles.header_title_container}>
-                <Typography size={30} bold={true}>
-                    Agendar una cita
+                <Typography size={25} bold={true}>
+                    Selecciona tu servicio
                 </Typography>
               </View>
             </View>
@@ -83,11 +86,11 @@ const SelectService = ({navigation}) => {
             {
             dummyData.map(item => {
                 return (
-                    <View key={item.id} style={styles.cardService}>
-                        <Typography size={25} bold={true}>{item.name}</Typography>
-                        <Typography size={22} bold={false}>Precio: {item.price}</Typography>
-                        <Typography size={20} bold={false}>Duración: {item.duration} minutos</Typography>
-                    </View>
+                    <ServiceItem
+                        setSlctService={setSlctService}
+                        navigation={navigation}
+                        dataService={item}
+                    />
                 )
             })
             }
@@ -102,20 +105,6 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         margin: 20,
         alignItems: 'center'
-    },
-
-    cardService: {
-        width: '96%',
-        height: 150,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        margin: 10,
-        elevation: 6,
-        display: 'flex',
-        direction: 'column',
-        alignItems: 'center',
-        justifyContent: 'center'
-        
     },
 
     header: {
