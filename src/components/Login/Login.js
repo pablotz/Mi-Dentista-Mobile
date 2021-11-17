@@ -1,40 +1,32 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useRef, useEffect} from 'react'
 import { View, Text, StyleSheet, TextInput, SafeAreaView, ToastAndroid } from 'react-native'
 import Button from '../Atoms/Button';
 import Input from '../Atoms/Input';
 import Singup_user from '../../service/singup';
 import Typography from '../Atoms/Typography';
 import { AuthContext } from '../Context/context';
+import Toast from "react-native-fast-toast";
+
 
 const Login = ({navigation}) => {
+
+  const toast = useRef(null);
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const { signIn } = useContext(AuthContext);
 
-  const sendData = async () => {
-    const user = {
-      email,
-      password
-    }
-    let response = await Singup_user.login(user)
-
-    console.log(response.status)
-
-    if(response.status === true){
-      navigation.navigate('Tabs')
-    } else {
-      ToastAndroid.showWithGravity(
-        "Ingresa todos los datos",
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER
-      );
-    }
-  }
-
   const loginHandle = (email, password) => {
-    signIn(email, password)
+    if(email === "" || password === ""){
+      toast.current.show("Llena todos los campos.", {
+        type: "danger",
+        duration: 2500,
+        animationType: "zoom-in"
+      });
+    }else{
+      signIn(email, password)
+    }
   }
 
     return (
@@ -51,12 +43,14 @@ const Login = ({navigation}) => {
                 Soy nuevo aquí quiero <Typography bold={true} size={18}>registrarme</Typography>
               </Typography>
           </View>
-            <SafeAreaView style={styles.inputs}>
-              <Input style={styles.user} value={email} onChangeText={setEmail} placeholder="Correo" />
+            <View style={styles.inputs}>
+              <Input autoCapitalize='none' style={styles.user} value={email} onChangeText={setEmail} placeholder="Correo" />
               <Input secureTextEntry={true} value={password} onChangeText={setPassword} style={styles.pass} placeholder="Contraseña" />
 
-              <Button style={styles.buttonLogin} onPress={() => loginHandle(email, password)}>Iniciar sesión</Button>
-            </SafeAreaView>     
+              <Button style={styles.buttonLogin} onPress={() => loginHandle(email, password) }>Iniciar sesión</Button>
+            </View>  
+            
+            <Toast ref={toast} />   
         </View>
     )
 }

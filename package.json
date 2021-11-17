@@ -23,6 +23,7 @@
     "react-native-awesome-loading": "^1.0.15",
     "react-native-events-calendar": "git+https://github.com/joshjhargreaves/react-native-event-calendar.git",
     "react-native-fast-image": "^8.5.11",
+    "react-native-fast-toast": "^3.0.1",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-lightning-modal": "^2.0.1",
     "react-native-modal": "^13.0.0",

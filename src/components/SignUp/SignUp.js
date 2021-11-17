@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext, useRef} from 'react'
 import Typography from '../Atoms/Typography';
 import Button from '../Atoms/Button';
 import Input from '../Atoms/Input';
@@ -6,11 +6,16 @@ import Singup_user from '../../service/singup';
 import CheckBox from '@react-native-community/checkbox'
 import { View, Text, StyleSheet, TextInput, SafeAreaView} from 'react-native'
 import IconButton from '../Atoms/ButtonIcon/IconButton';
+import { AuthContext } from '../Context/context';
 import {LeftArrow} from '../Atoms/Icons'
+import Toast from "react-native-fast-toast";
+
 
 
 
 const SignUp = ({navigation}) => {
+
+    const toast = useRef(null);
 
     const [name, setName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -21,6 +26,9 @@ const SignUp = ({navigation}) => {
     const [phone, setPhone] = useState("")
     const [terms, setTerms] = useState(false)
 
+    const { signUp } = useContext(AuthContext);
+
+
     const handleTerms = () => {
         !terms ? 
             setTerms(true)
@@ -28,21 +36,44 @@ const SignUp = ({navigation}) => {
             setTerms(false)
     }
 
-    const sendUser = async () => {
-      const user = {
-        name,
-        lastName,
-        email,
-        password,
-        phone,
-        accessCode
-      }
-      let response = await Singup_user.addUser(user)
+    const signUpHandle = () => {
 
-      console.log(response)
-      if(response.status === "OK"){
-        navigation.navigate('Login')
+      if(
+        name === "" || 
+        lastName === "" || 
+        email === "" || 
+        password === "" ||
+        accessCode === "" || 
+        phone === "") {
+          
+          toast.current.show("Llena todos los campos.", {
+            type: "danger",
+            duration: 2500,
+            animationType: "zoom-in"
+          });
+
+          return;
+
+      } 
+
+      if(terms === false) {
+        toast.current.show("Acepta los términos y condiciones.", {
+          type: "danger",
+          duration: 2500,
+          animationType: "zoom-in"
+        });
+        return;
       }
+        const user = {
+          name,
+          lastName,
+          email,
+          password,
+          phone,
+          accessCode
+        }
+        signUp(user)
+      
     }
 
     return (
@@ -61,10 +92,10 @@ const SignUp = ({navigation}) => {
             <SafeAreaView style={styles.inputs}>
               <Input value={name} onChangeText={setName} style={styles.user} placeholder="Nombre/s"></Input>
               <Input value={lastName} onChangeText={setLastName} style={styles.user} placeholder="Apellidos"></Input>
-              <Input value={email} onChangeText={setEmail} style={styles.user} placeholder="Correo electronico"></Input>
-              <Input value={phone} onChangeText={setPhone} style={styles.user} placeholder="Número de teléfono"></Input>
-              <Input value={password} onChangeText={setPassword} secureTextEntry={true} style={styles.pass} placeholder="Ingresa una contraseña"></Input>
-              <Input value={accessCode} onChangeText={setAccessCode} secureTextEntry={false} style={styles.pass} placeholder="Código de acceso"></Input>
+              <Input value={email} autoCapitalize='none' onChangeText={setEmail} style={styles.user} placeholder="Correo electronico"></Input>
+              <Input value={phone} keyboardType='numeric' onChangeText={setPhone} style={styles.user} placeholder="Número de teléfono"></Input>
+              <Input value={password} autoCapitalize='none' onChangeText={setPassword} secureTextEntry={true} style={styles.pass} placeholder="Ingresa una contraseña"></Input>
+              <Input value={accessCode} autoCapitalize='none' onChangeText={setAccessCode} secureTextEntry={false} style={styles.pass} placeholder="Código de acceso"></Input>
 
               <View style={styles.checkView}>
                 <CheckBox 
@@ -76,8 +107,9 @@ const SignUp = ({navigation}) => {
                 </Typography>
               </View>
 
-              <Button disable={true} onPress={() => sendUser()} tyle={styles.buttonRegister}>Registrarse</Button>
+              <Button disable={true} onPress={() => signUpHandle()} tyle={styles.buttonRegister}>Registrarse</Button>
             </SafeAreaView>     
+            <Toast ref={toast} />  
         </View>
     )
 }
