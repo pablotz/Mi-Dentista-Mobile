@@ -16,7 +16,7 @@ import RNSingleSelect, {
 } from "@freakycoder/react-native-single-select";
 
 
-const MakeAppointment = ({navigation}) => {
+const MakeAppointment = ({navigation, route}) => {
 
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [minDate, setMinDate] = useState(null)
@@ -25,11 +25,20 @@ const MakeAppointment = ({navigation}) => {
   const [slctService, setSlctService] = useState(null)
   const [slctTime, setSlctTime] = useState('')
 
+  const {service} = route.params;
+
   const getDate = () => {
     let date = new Date();
     date.setDate(date.getDate() - 1);
     setMinDate(date)
   }
+
+  useEffect(() => {
+    if(service) {
+    setSlctService(service)
+    }
+  }, [service])
+
 
   const openDatePicker = () => {
       setShowDatePicker(true)
@@ -92,9 +101,7 @@ const MakeAppointment = ({navigation}) => {
 
             <View style={styles.body}>
             <ButtonTextIcon title={'open'} onPress={
-              () =>  navigation.navigate('selectService', {
-                setSlctService: setSlctService
-              })
+              () =>  navigation.navigate('selectService')
             }
              icon={<Tooth height="24" width="24" color='#353535'/>}
              >

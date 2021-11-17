@@ -5,12 +5,14 @@ import Typography from '../Atoms/Typography'
 const ServiceItem = ({dataService, setSlctService, navigation}) => {
 
     const [data, setData] = useState(dataService)
+    const [serviceHere, setServiceHere] = useState(null)
 
     const {name, price, duration, id} = data
 
     const selectedService = () => {
-        setSlctService(data)
-        navigation.navigate('makeAppointment')
+        navigation.navigate('makeAppointment', {
+            service: data,
+        })
     }
 
     return (
