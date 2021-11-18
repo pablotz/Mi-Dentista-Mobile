@@ -73,6 +73,11 @@ const MakeAppointment = ({navigation, route}) => {
     getDate()
   }, [])
 
+
+  useEffect(() => {
+    setSlctService(service)
+  }, [service])
+
   const vacation = {key: 'vacation', color: 'red', selectedDotColor: 'blue'};
   const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
   const workout = {key: 'workout', color: 'green'};
