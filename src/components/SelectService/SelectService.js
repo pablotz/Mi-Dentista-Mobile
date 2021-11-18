@@ -67,8 +67,6 @@ const SelectService = ({navigation, route}) => {
         
     ]
 
-    const {setSlctService} = route.params;
-
     return (
         <ScrollView contentContainerStyle={styles.cards_container}>
 
@@ -87,7 +85,6 @@ const SelectService = ({navigation, route}) => {
             dummyData.map(item => {
                 return (
                     <ServiceItem
-                        setSlctService={setSlctService}
                         navigation={navigation}
                         dataService={item}
                     />

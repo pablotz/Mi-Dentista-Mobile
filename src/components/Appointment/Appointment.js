@@ -31,7 +31,9 @@ const Appointment = ({navigation}) => {
       }
     
     const goToAppointment = () => {
-        navigation.navigate('makeAppointment')
+        navigation.navigate('makeAppointment', {
+          serice: null
+        })
     }
 
     const events = [

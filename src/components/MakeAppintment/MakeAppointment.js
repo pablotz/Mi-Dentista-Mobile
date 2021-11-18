@@ -20,7 +20,7 @@ import { Root, Popup } from 'react-native-popup-confirm-toast'
 
 
 
-const MakeAppointment = ({navigation}) => {
+const MakeAppointment = ({navigation, route}) => {
 
   LocaleConfig.locales['es'] = {
     monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
@@ -60,6 +60,8 @@ const MakeAppointment = ({navigation}) => {
   const [selectedDate, setSelectedDate] = useState(null)
   const [slctService, setSlctService] = useState(null)
   const [slctTime, setSlctTime] = useState('')
+
+  const {service} = route.params;
 
   const getDate = () => {
     let date = new Date();
@@ -120,9 +122,7 @@ const MakeAppointment = ({navigation}) => {
 
           <View style={styles.body}>
             <ButtonTextIcon title={'open'} onPress={
-              () =>  navigation.navigate('selectService', {
-                setSlctService: setSlctService
-              })
+              () =>  navigation.navigate('selectService')
             }
              icon={<Tooth height="24" width="24" color='#353535'/>}
              >
