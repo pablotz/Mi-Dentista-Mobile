@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, {Path,Line,Polyline,G,Rect} from 'react-native-svg';
 
-export default function Calendar({color,height,width}) {
+export default function CalendarPic({color,height,width}) {
   
     return (  
         <Svg 

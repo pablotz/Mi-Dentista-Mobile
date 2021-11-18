@@ -21,6 +21,7 @@
     "react": "17.0.2",
     "react-native": "0.66.1",
     "react-native-awesome-loading": "^1.0.15",
+    "react-native-calendars": "^1.1269.0",
     "react-native-events-calendar": "git+https://github.com/joshjhargreaves/react-native-event-calendar.git",
     "react-native-fast-image": "^8.5.11",
     "react-native-fast-toast": "^3.0.1",

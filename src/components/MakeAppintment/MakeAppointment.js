@@ -3,7 +3,7 @@ import {View, StyleSheet} from 'react-native'
 import IconButton from '../Atoms/ButtonIcon/IconButton';
 import {
   LeftArrow, 
-  Calendar, 
+  CalendarPic, 
   Tooth, 
   Info
 } from '../Atoms/Icons'
@@ -14,10 +14,46 @@ import ButtonTextIcon from '../Atoms/ButtonIconText/IconTextButton';
 import RNSingleSelect, {
   ISingleSelectDataType,
 } from "@freakycoder/react-native-single-select";
+import {Calendar, LocaleConfig} from 'react-native-calendars';
+import { Root, Popup } from 'react-native-popup-confirm-toast'
+
+
 
 
 const MakeAppointment = ({navigation}) => {
 
+  LocaleConfig.locales['es'] = {
+    monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    dayNames: ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
+    dayNamesShort: ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
+  };
+
+  LocaleConfig.defaultLocale = 'es';
+
+  const calendarComponent = () => {
+    return(
+      <View style={styles.calendar} >
+      <Typography size={25}bold={false}>
+            Fecha de tu cita
+      </Typography>
+
+      <Calendar 
+        current={new Date()}
+        disableAllTouchEventsForDisabledDays={true}
+        markedDates={disabledDates}
+        minDate={minDate}
+        hideExtraDays={true}
+        onDayPress={(day) => {
+          setSelectedDate(day.dateString)
+          popup.hide()
+        }}
+      />
+    </View>
+    )
+  }
+
+  const popup = Popup;
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [minDate, setMinDate] = useState(null)
 
@@ -27,32 +63,23 @@ const MakeAppointment = ({navigation}) => {
 
   const getDate = () => {
     let date = new Date();
-    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate());
     setMinDate(date)
-  }
-
-  const openDatePicker = () => {
-      setShowDatePicker(true)
-    }
-
-  const onCancel = () => {
-    // You should close the modal in here
-    setShowDatePicker(false)
-  }
-
-  const onConfirm = ( date ) => {
-    // You should close the modal in here
-    setShowDatePicker(false)
-    
-    // The parameter 'date' is a Date object so that you can use any Date prototype method.
-    console.log(date)
-    var meses = new Array ("ene.","feb.","mar.","abr.","may.","jun.","jul.","ago.","sep.","oct.","nov.","dic.");
-    setSelectedDate(date.getDate() + " de " + meses[date.getMonth()] + " de " + date.getFullYear())
   }
 
   useEffect(() => {
     getDate()
   }, [])
+
+  const vacation = {key: 'vacation', color: 'red', selectedDotColor: 'blue'};
+  const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
+  const workout = {key: 'workout', color: 'green'};
+
+  const disabledDates = {
+    '2021-11-20': {disabled: true},
+    '2021-11-21': {disabled: true},
+    '2021-11-22': {disabled: true}
+  }
 
 
   const staticData = [
@@ -78,6 +105,7 @@ const MakeAppointment = ({navigation}) => {
 
 
     return (
+      <Root style={styles.rootContainer}>
         <View style={styles.container}>
             <View style={styles.header}>
               <IconButton onPress={() =>  navigation.navigate('Tabs')}
@@ -90,7 +118,7 @@ const MakeAppointment = ({navigation}) => {
               </View>
             </View>
 
-            <View style={styles.body}>
+          <View style={styles.body}>
             <ButtonTextIcon title={'open'} onPress={
               () =>  navigation.navigate('selectService', {
                 setSlctService: setSlctService
@@ -105,8 +133,19 @@ const MakeAppointment = ({navigation}) => {
             }
             
             </ButtonTextIcon>
-            <ButtonTextIcon title={'open'} onPress={openDatePicker}
-             icon={<Calendar height="24" width="24" color='#353535'/>}
+
+            <ButtonTextIcon title={'open'} onPress={
+              () =>  {
+                popup.show({
+                  bodyComponent: () => calendarComponent(),
+                  confirmText: 'Regresar',
+                  type: 'confirm',
+                  iconEnabled: false,
+                  buttonEnabled: false,
+              });
+              }
+            }
+             icon={<CalendarPic height="24" width="24" color='#353535'/>}
              >
             {
             !selectedDate ? 
@@ -115,7 +154,6 @@ const MakeAppointment = ({navigation}) => {
             }
             
             </ButtonTextIcon>
-
             {
               selectedDate && slctService ?
               <View style={styles.visibleContainer}>
@@ -185,27 +223,19 @@ const MakeAppointment = ({navigation}) => {
             </View>
             
             }
-
-            <DatePicker
-              isVisible={showDatePicker}
-              mode={'single'}
-              onCancel={onCancel}
-              onConfirm={onConfirm}
-              minDate={minDate}
-              
-            />
-
-            
-
-            </View>
+          </View>
             
         </View>
+      </Root>
     )
 }
 
 const styles = StyleSheet.create({
+    rootContainer: {
+    flex: 1,
+    },
+
     container: {
-      flex: 1,
       margin: 20,
       flexDirection: 'column',
       justifyContent: 'flex-start',
@@ -226,7 +256,7 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '80%',
+      height: '90%',
     },
 
   
@@ -242,7 +272,11 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-    }
+    },
+
+    calendar: {
+      marginTop: 30,
+    },
       
     })
 

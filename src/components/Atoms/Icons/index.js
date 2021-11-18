@@ -3,7 +3,7 @@ import Add from './Add';
 import Ghost from './Ghost';
 import Search from './Search';
 import Trash from './Trash';
-import Calendar from './Calendar';
+import CalendarPic from './Calendar';
 import Tooth from './Tooth';
 import Info from './Info';
 
@@ -13,7 +13,7 @@ export {
     Ghost,
     Search,
     Trash,
-    Calendar,
+    CalendarPic,
     Tooth,
     Info
 }
