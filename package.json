@@ -1,5 +1,5 @@
 {
-  "name": "midentistafront",
+  "name": "MiDentista",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generateAPK": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res && cd android && gradlew assembleDebug && cd .."
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.0",
@@ -22,6 +23,7 @@
     "react-native": "0.66.1",
     "react-native-awesome-loading": "^1.0.15",
     "react-native-calendars": "^1.1269.0",
+    "react-native-change-icon": "^3.1.1",
     "react-native-events-calendar": "git+https://github.com/joshjhargreaves/react-native-event-calendar.git",
     "react-native-fast-image": "^8.5.11",
     "react-native-fast-toast": "^3.0.1",
