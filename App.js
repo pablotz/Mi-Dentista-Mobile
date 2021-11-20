@@ -26,6 +26,8 @@ import MakeAppointment from './src/components/MakeAppintment/MakeAppointment';
 import Appointment from './src/components/Appointment/Appointment';
 import SelectService from './src/components/SelectService/SelectService';
 import Toast from "react-native-fast-toast";
+import { Root } from 'react-native-popup-confirm-toast'
+
 
 
 
@@ -182,13 +184,14 @@ export default function App() {
   }
 
   return (
-    
-    <AuthContext.Provider value={authContext}>
-    <NavigationContainer>
-      {loginState.userToken ? <AuthStack/> : <LoginStack />}
-    </NavigationContainer>
-    <Toast ref={toast} />
-    </AuthContext.Provider>
+    <Root>
+      <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        {loginState.userToken ? <AuthStack/> : <LoginStack />}
+      </NavigationContainer>
+      <Toast ref={toast} />
+      </AuthContext.Provider>
+    </Root>
     
 
   );

@@ -14,7 +14,7 @@ import RNSingleSelect, {
   ISingleSelectDataType,
 } from "@freakycoder/react-native-single-select";
 import {Calendar, LocaleConfig} from 'react-native-calendars';
-import { Root, Popup } from 'react-native-popup-confirm-toast'
+import { Popup } from 'react-native-popup-confirm-toast'
 
 
 
@@ -111,7 +111,7 @@ const MakeAppointment = ({navigation, route}) => {
 
 
     return (
-      <Root style={styles.rootContainer}>
+      <View style={styles.rootContainer}>
         <View style={styles.container}>
             <View style={styles.header}>
               <IconButton onPress={() =>  navigation.navigate('Tabs')}
@@ -230,7 +230,7 @@ const MakeAppointment = ({navigation, route}) => {
           </View>
             
         </View>
-      </Root>
+      </View>
     )
 }
 

@@ -8,7 +8,7 @@ import Input from '../Atoms/Input';
 import {Trash} from '../Atoms/Icons';
 import EventCalendar from 'react-native-events-calendar'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Root, Popup } from 'react-native-popup-confirm-toast'
+import { Popup } from 'react-native-popup-confirm-toast'
 
 
 const Appointment = ({navigation}) => {
@@ -26,6 +26,9 @@ const Appointment = ({navigation}) => {
 
     const bodyComponent = (props) => {
       return <View style={styles.modal}>
+              <Typography size={27}bold={false}>
+                ¿Estás seguro que deseas eliminar esta cita?
+              </Typography>
               <Button onPress={() => popup.hide()}>Confirmar</Button>
             </View>
       }
@@ -58,7 +61,7 @@ const Appointment = ({navigation}) => {
     }, [])
 
     return (
-      <Root>
+      <>
         <SafeAreaView style={styles.container}>
 
 
@@ -101,7 +104,6 @@ const Appointment = ({navigation}) => {
                     icon={<Trash height="35" width="35" color='#fff'/>}
                     onPress={() => popup.show({
                       type: 'confirm',
-                      textBody: 'Se cancelara la cita',
                       bodyComponent: () => bodyComponent({popup}),
                       confirmText: 'Regresar',
                       buttonEnabled: false,
@@ -118,7 +120,7 @@ const Appointment = ({navigation}) => {
                 />
               </View>
           </SafeAreaView>
-        </Root>
+        </>
     )
 }
 
