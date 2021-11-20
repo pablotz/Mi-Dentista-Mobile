@@ -21,7 +21,7 @@ import Loading from './src/components/Atoms/Loading/Loading';
 import { AuthContext } from './src/components/Context/context';
 import AscyncStorage from '@react-native-community/async-storage';
 import { loginReducer } from './src/components/Reducers/SignInUpReducer';
-import Payments from './src/components/Payments/Payments';
+import History from './src/components/History/History';
 import MakeAppointment from './src/components/MakeAppintment/MakeAppointment';
 import Appointment from './src/components/Appointment/Appointment';
 import SelectService from './src/components/SelectService/SelectService';
@@ -36,7 +36,7 @@ const AuthStack = () => {
   screenOptions={{headerShown: false}}
   >
     <Stack.Screen name="Tabs" component={Tabs} />
-    <Stack.Screen name="Payments" component={Payments} />
+    <Stack.Screen name="History" component={History} />
     <Stack.Screen name="makeAppointment" component={MakeAppointment} />
     <Stack.Screen name="selectService" component={SelectService} />
   </Stack.Navigator>)

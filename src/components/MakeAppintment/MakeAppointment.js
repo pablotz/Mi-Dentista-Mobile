@@ -8,7 +8,6 @@ import {
   Info
 } from '../Atoms/Icons'
 import Typography from '../Atoms/Typography';
-import DatePicker from 'react-native-neat-date-picker';
 import Button from '../Atoms/Button'
 import ButtonTextIcon from '../Atoms/ButtonIconText/IconTextButton';
 import RNSingleSelect, {

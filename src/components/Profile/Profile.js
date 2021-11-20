@@ -4,14 +4,14 @@ import ButtonSmall from '../Atoms/Button_small';
 import { AuthContext } from '../Context/context';
 import Typography from '../Atoms/Typography';
 import { View, Text, StyleSheet} from 'react-native'
+import ButtonTextIconBg from '../Atoms/ButtonIconTextBg/IconTextButtonBg';
+import {
+    Doctor
+} from '../Atoms/Icons';
 
 const Profile = ({navigation}) => {
 
     const { signOut } = useContext(AuthContext);
-
-    const goToPayments = () => {
-        navigation.navigate('Payments')
-    }
 
     return (
         <View>
@@ -20,7 +20,13 @@ const Profile = ({navigation}) => {
                 <Typography bold={false} size={25}>correo: pablotroll100@gmail.com</Typography>
             </View>
             <View style={styles.btnBills}>
-                <ButtonSmall onPress={(() => goToPayments())}>Ver pagos</ButtonSmall>
+                <ButtonTextIconBg title={'open'} onPress={
+                () =>  navigation.navigate('History')
+                }
+                icon={<Doctor height="70" width="70" color='#353535'/>}
+                >
+                    Historial de citas
+                </ButtonTextIconBg>
             </View>
             <View style={styles.btnLogout}>
                 <ButtonSmall>Cambiar contraseña</ButtonSmall>
@@ -33,13 +39,13 @@ const Profile = ({navigation}) => {
 const styles = StyleSheet.create({
     btnLogout: {
         alignItems: 'center',
-        marginTop: '30%',
+        marginTop: 30
     },
 
 
     btnBills: {
+        marginTop: 50,
         alignItems: 'center',
-        marginTop: '20%',
     },
 
     userInfo: {

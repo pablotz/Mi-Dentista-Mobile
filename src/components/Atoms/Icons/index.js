@@ -6,6 +6,7 @@ import Trash from './Trash';
 import CalendarPic from './Calendar';
 import Tooth from './Tooth';
 import Info from './Info';
+import Doctor from './Doctor';
 
 export {
     LeftArrow,
@@ -15,5 +16,6 @@ export {
     Trash,
     CalendarPic,
     Tooth,
-    Info
+    Info,
+    Doctor
 }
