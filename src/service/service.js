@@ -1,20 +1,12 @@
 export default class service_api {
-    static getService = (usuario) => {
+    static getService = (token) => {
         let response = fetch(
-            "http://oscarhendrix10.pythonanywhere.com/user/add", {
-                method: "POST",
+            "http://oscarhendrix10.pythonanywhere.com/services/get", {
+                method: "GET",
                 headers: new Headers({
-                      "Content-Type": "application/json"
+                      "Content-Type": "application/json",
+                      "token": token
                 }),
-                body: JSON.stringify({
-                 name: usuario.name,
-                 lastName: usuario.lastName,
-                 email: usuario.email,
-                 password: usuario.password,
-                 access_code: usuario.accessCode,
-                 phone: usuario.phone,
-                 role: 'customer'
-             }),
             }
         ).then(response => response.json())
          .catch(err => console.error(err));

@@ -74,7 +74,9 @@ const MakeAppointment = ({navigation, route}) => {
 
 
   useEffect(() => {
+    if(service){
     setSlctService(service)
+    }
   }, [service])
 
   const vacation = {key: 'vacation', color: 'red', selectedDotColor: 'blue'};

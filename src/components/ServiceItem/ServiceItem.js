@@ -7,7 +7,13 @@ const ServiceItem = ({dataService, setSlctService, navigation}) => {
     const [data, setData] = useState(dataService)
     const [serviceHere, setServiceHere] = useState(null)
 
-    const {name, price, duration, id} = data
+    const {
+        name, 
+        price, 
+        duration, 
+        id,
+        systemformat
+    } = data
 
     const selectedService = () => {
         navigation.navigate('makeAppointment', {
@@ -23,8 +29,8 @@ const ServiceItem = ({dataService, setSlctService, navigation}) => {
         >
             <View>
                 <Typography size={25} bold={true}>{name}</Typography>
-                <Typography size={22} bold={false}>Precio: {price}</Typography>
-                <Typography size={20} bold={false}>Duración: {duration} minutos</Typography>
+                <Typography size={22} bold={false}>Precio: ${price}</Typography>
+                <Typography size={20} bold={false}>Duración: {systemformat[0].duration +" "+ systemformat[0].format} </Typography>
             </View>
     </TouchableHighlight>
     )

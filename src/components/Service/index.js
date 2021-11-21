@@ -6,84 +6,40 @@ import {LeftArrow,Ghost} from '../Atoms/Icons'
 import IconButton from '../Atoms/ButtonIcon/IconButton';
 import ServiceCard from '../Atoms/ServiceCard/ServiceCard';
 import Input from '../Atoms/Input'
+import AscyncStorage from '@react-native-community/async-storage';
 import {Search} from '../Atoms/Icons'
 import SelectService from '../SelectService/SelectService'
 import ServiceItem from '../ServiceItem/ServiceItem';
+import service_api from '../../service/service'
 
 const Service = ({navigation}) => {
 
-  
-    const dummyData = [
-        {
-            id: 1,
-            name: 'Limpieza bucal',
-            price: '$100',
-            duration: 60,
-        },
-        {
-            id: 2,
-            name: 'Extracción dental',
-            price: '$200',
-            duration: 30,
-        },
-        {
-            id: 3,
-            name: 'Aplicación de resina',
-            price: '$300',
-            duration: 90,
-        },
-        {
-            id: 4,
-            name: 'Service 4',
-            price: '$400',
-            duration: 120,
-        },
-        {
-            id: 5,
-            name: 'Service 5',
-            price: '$500',
-            duration: 35,
-        },
-        {
-            id: 6,
-            name: 'Service 6',
-            price: '$600',
-            duration: 35,
-        },
-        {
-            id: 7,
-            name: 'Service 7',
-            price: '$700',
-            duration: 45,
-        },
-        {
-            id: 8,
-            name: 'Service 8',
-            price: '$200',
-            duration: 55,
-        },
-        {
-            id: 9,
-            name: 'Service 9',
-            price: '$150',
-            duration: 160,
-        }
+    useEffect(() => {
+      const getServices = async () => {
+        let userToken
+        userToken = await AscyncStorage.getItem('userToken');
         
-    ]
+        let response = await service_api.getService(userToken)
+        setBackList(response)
+        setServiceList(response)
+      }
+      getServices()
+      
+    }, [])
 
     const [slctService, setSlctService] = useState(null)
     const [serviceList, setServiceList] = useState([])
-
-    useEffect(() => {
-        setServiceList(dummyData)
-    }, [])
+    const [backList,  setBackList] = useState([])
 
     const handleSearch = (search) => {
       console.log(search)
-      const filteredService = dummyData.filter(
+      const filteredService = backList.filter(
         service => service.name.toLowerCase().includes(search.toLowerCase())
       )
       setServiceList(filteredService)
+      if(search == ''){
+        setServiceList(backList)
+      }
     }
 
     
@@ -118,7 +74,7 @@ const Service = ({navigation}) => {
                 style={{
                   margin: 10,
                   width: 300
-                }} placeholder="Limpieza bucal"></Input>
+                }} placeholder="Limpieza dental"></Input>
 
               </View>              
 
@@ -127,7 +83,9 @@ const Service = ({navigation}) => {
               </Typography>
 
 
-            <ScrollView contentContainerStyle={styles.cards_container}>
+            <ScrollView 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.cards_container}>
 
               {
               serviceList.map(item => {
