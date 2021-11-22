@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import {View, StyleSheet} from 'react-native'
+import React, {useState, useEffect, useRef} from 'react'
+import {View, StyleSheet, Text} from 'react-native'
 import IconButton from '../Atoms/ButtonIcon/IconButton';
 import {
   LeftArrow, 
@@ -15,8 +15,9 @@ import RNSingleSelect, {
 } from "@freakycoder/react-native-single-select";
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 import { Popup } from 'react-native-popup-confirm-toast'
-
-
+import appointment_api from '../../service/appointment'
+import AscyncStorage from '@react-native-community/async-storage';
+import Toast from "react-native-fast-toast";
 
 
 const MakeAppointment = ({navigation, route}) => {
@@ -29,6 +30,8 @@ const MakeAppointment = ({navigation, route}) => {
   };
 
   LocaleConfig.defaultLocale = 'es';
+
+  const toast = useRef(null);
 
   const calendarComponent = () => {
     return(
@@ -53,12 +56,15 @@ const MakeAppointment = ({navigation, route}) => {
   }
 
   const popup = Popup;
-  const [showDatePicker, setShowDatePicker] = useState(false)
   const [minDate, setMinDate] = useState(null)
 
   const [selectedDate, setSelectedDate] = useState(null)
   const [slctService, setSlctService] = useState(null)
   const [slctTime, setSlctTime] = useState('')
+  const [token, setToken] = useState(null)
+  const [appointment, setAppointment] = useState({})
+  const [hours, setHours] = useState([])
+
 
   const {service} = route.params;
 
@@ -70,6 +76,12 @@ const MakeAppointment = ({navigation, route}) => {
 
   useEffect(() => {
     getDate()
+    const getToken = async () => {
+      let userToken
+      userToken = await AscyncStorage.getItem('userToken');
+      setToken(userToken)
+    }
+    getToken()
   }, [])
 
 
@@ -77,7 +89,55 @@ const MakeAppointment = ({navigation, route}) => {
     if(service){
     setSlctService(service)
     }
-  }, [service])
+
+    if(service && selectedDate){
+    let appointment = {
+      date: selectedDate,
+      service: slctService.id,
+    }
+
+    const getHours = async () => {
+      let response = await appointment_api.getAvailableHrs(token, appointment)
+      console.log(response)
+      if(response.status === "OK"){
+       response.content.map((hour, index) => {
+        let newHour = {
+          id: hour,
+          value: tConvert(hour) + " - " + addMinutes(hour, slctService.duration)
+          
+         }
+
+         setHours(prevState => [...prevState, newHour])
+       })
+      }
+    }
+
+    getHours()
+  }
+  
+}, [service, selectedDate])
+
+  const  tConvert = (time) => {
+  time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+  if (time.length > 1) { 
+    time = time.slice (1); 
+    time[5] = +time[0] < 12 ? ' AM' : ' PM'; 
+    time[0] = +time[0] % 12 || 12;
+  }
+  
+  return time.join (''); 
+  
+  }
+
+  const addMinutes = (time, minsToAdd) => {
+    function D(J){ return (J<10? '0':'') + J;};
+    var piece = time.split(':');
+    var mins = piece[0]*60 + +piece[1] + +minsToAdd;
+  
+    return tConvert(D(mins%(24*60)/60 | 0) + ':' + D(mins%60));  
+  }  
+
 
   const vacation = {key: 'vacation', color: 'red', selectedDotColor: 'blue'};
   const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
@@ -90,30 +150,36 @@ const MakeAppointment = ({navigation, route}) => {
   }
 
 
-  const staticData = [
-    { id: 0, value: "7:30 am - 8:00 am" },
-    { id: 1, value: "10:30 am - 11:30 am" },
-    { id: 2, value: "12:00 pm - 1:30 pm" },
-    { id: 3, value: "3:30 pm - 4:00 pm" },
-    { id: 4, value: "6:00 pm - 7:00 pm" },
-  ];
-
-  const TxtComponent = () => {
-    return (
-      <View style={styles.txtContainer}>
-        <Typography size={25} bold={true}>
-        </Typography>
-      </View>
-    );
-  }
-
   const addAppointment = () => {
+    let appointment = {
+      date: selectedDate,
+      service: slctService.id,
+      hour: slctTime.id
+    }
+
     
+    const createAppointment = async () => {
+      let response = await appointment_api.createAppointment(token, appointment)
+      console.log(response)
+      if(response.status === "OK"){
+        toast.current.show("Cita creada con exito 🦷.", {
+          type: "success",
+          duration: 3000,
+          animationType: "zoom-in"
+        });
+        setTimeout(() => {
+          navigation.navigate('Tabs')
+        }, 2000);
+      }
+    }
+
+    createAppointment()
   }
 
 
     return (
       <View style={styles.rootContainer}>
+        <Toast ref={toast} />   
         <View style={styles.container}>
             <View style={styles.header}>
               <IconButton onPress={() =>  navigation.navigate('Tabs')}
@@ -161,13 +227,13 @@ const MakeAppointment = ({navigation, route}) => {
             
             </ButtonTextIcon>
             {
-              selectedDate && slctService ?
+              selectedDate && slctService && hours ?
               <View style={styles.visibleContainer}>
                 <Typography size={25} bold={false}>
                   Horario:
                 </Typography>
                 <RNSingleSelect
-                data={staticData}
+                data={hours}
                 placeholder={'Selecciona la hora de tu cita'}
                 width={325}
                 menuItemTextStyle={{ fontSize: 18 }}
@@ -189,7 +255,7 @@ const MakeAppointment = ({navigation, route}) => {
                 }
               />
 
-            <Button>
+            <Button onPress={addAppointment}>
               Confirmar datos de cita
             </Button>
 
