@@ -26,14 +26,6 @@ const tabOptions = {
 }
 
 const Tabs = () => {
-
-    const Home = () => {
-        return (
-            <View>
-                <Text>Home</Text>
-            </View>
-        )
-    }
     
     return (
         <Tab.Navigator

@@ -168,7 +168,9 @@ const MakeAppointment = ({navigation, route}) => {
           animationType: "zoom-in"
         });
         setTimeout(() => {
-          navigation.navigate('Tabs')
+          navigation.navigate('Tabs', {
+            reload: true
+          })
         }, 2000);
       }
     }

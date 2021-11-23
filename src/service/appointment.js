@@ -37,4 +37,44 @@ export default class appointment_api {
  
          return response;
     }
+
+    static getAppointmentsUser = (token, user) => {
+        let response = fetch(
+            "http://oscarhendrix10.pythonanywhere.com/appointment/get_by_user", {
+                method: "POST",
+                headers: new Headers({
+                      "Content-Type": "application/json",
+                      "token": token
+                }),
+                body: JSON.stringify({
+                    id: user.id
+                }),
+            }
+        ).then(response => response.json())
+         .catch(err => console.error(err));
+ 
+         return response;
+    }
+
+
+    static cancelAppointment = (token, appointment) => {
+        let response = fetch(
+            "http://oscarhendrix10.pythonanywhere.com/appointment/cancel", {
+                method: "POST",
+                headers: new Headers({
+                      "Content-Type": "application/json",
+                      "token": token
+                }),
+                body: JSON.stringify({
+                    id: appointment.id
+                }),
+            }
+        ).then(response => response.json())
+         .catch(err => console.error(err));
+ 
+         return response;
+    }
+
+
+    
 }

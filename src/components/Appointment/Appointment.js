@@ -9,11 +9,17 @@ import {Trash} from '../Atoms/Icons';
 import EventCalendar from 'react-native-events-calendar'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Popup } from 'react-native-popup-confirm-toast'
+import appointment_api from '../../service/appointment';
+import AscyncStorage from '@react-native-community/async-storage';
 
 
-const Appointment = ({navigation}) => {
+const Appointment = ({navigation, route}) => {
 
     const [nowDate, setNowDate] = useState(null)
+    const [token, setToken] = useState(null)
+    const [allApnt, setAllApnt] = useState([])
+    const [closestApnt, setClosestApnt] = useState(null)
+    const [nearDate, setNearDate] = useState(null)
 
     const getDate = () => {
         var meses = new Array ("ene.","feb.","mar.","abr.","may.","jun.","jul.","ago.","sep.","oct.","nov.","dic.");
@@ -29,9 +35,23 @@ const Appointment = ({navigation}) => {
               <Typography size={27}bold={false}>
                 ¿Estás seguro que deseas eliminar esta cita?
               </Typography>
-              <Button onPress={() => popup.hide()}>Confirmar</Button>
+              <Button onPress={cancelAppointment}>Confirmar</Button>
             </View>
+    }
+
+    const cancelAppointment = async() => {
+      const apnt = {
+        id: nearDate.id,
       }
+
+      const response = await appointment_api.cancelAppointment(token, apnt)
+
+      if(response.status === "OK") {
+        setNearDate(null)
+        getAppointments()
+        popup.hide()
+      }
+    }
     
     const goToAppointment = () => {
         navigation.navigate('makeAppointment', {
@@ -39,25 +59,74 @@ const Appointment = ({navigation}) => {
         })
     }
 
-    const events = [
-        { color:'#98EFD3', start: '2021-11-05 12:30:00', end: '2021-11-05 18:30:00', title: 'Limpieza bucal con el doctor', summary: '3412 Piedmont Rd NE, GA 3032'},
-        { start: '2021-11-05 01:30:00', end: '2021-11-05 02:20:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-05 04:10:00', end: '2021-11-05 04:40:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-05 01:05:00', end: '2021-11-05 01:45:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-07 14:30:00', end: '2021-11-07 16:30:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-08 01:20:00', end: '2021-11-08 02:20:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-08 04:10:00', end: '2021-11-08 04:40:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-08 00:45:00', end: '2021-11-08 01:45:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-08 11:30:00', end: '2021-11-08 12:30:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-09 01:30:00', end: '2021-11-09 02:00:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-09 03:10:00', end: '2021-11-09 03:40:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' },
-        { start: '2021-11-09 00:10:00', end: '2021-11-09 01:45:00', title: 'Dr. Mariana Joseph', summary: '3412 Piedmont Rd NE, GA 3032' }
-    ]
     const yourDate = new Date()
+
+    const getAppointments = async () => {
+      let userToken
+      let today = new Date()
+      let appointmentsUser = []
+
+      userToken = await AscyncStorage.getItem('userToken');
+      setToken(userToken)
+
+      /*
+        CAMBIAR ESTO PABLO NO SE TE VAYA A OLVIDAR
+      */
+      const appointments = await appointment_api.getAppointmentsUser(userToken, {id: 2})
+      if(appointments.status === "OK"){     
+
+        //Getting the closest appointment
+        let closest = appointments.content.sort(function(a, b) {
+          var distancea = Math.abs(today - Date.parse(a.start_date_time));
+          var distanceb = Math.abs(today - Date.parse(b.start_date_time));
+          return distancea - distanceb; // sort a before b when the distance is smaller
+      });
+      
+
+        const closeDate = new Date(closest[0].start_date_time)
+
+        var meses = new Array ("ene.","feb.","mar.","abr.","may.","jun.","jul.","ago.","sep.","oct.","nov.","dic.");
+
+        if(Date.parse(closest[0].start_date_time) >= today.getTime() ){
+          
+          let hour = closest[0].start_date_time.split('T')[1].split(":")
+          hour = hour[0] + ":"+ hour[1]
+          
+          setNearDate(closest[0])
+          setClosestApnt(closeDate.getDate() + " de " + meses[closeDate.getMonth()] + " de " + closeDate.getFullYear() + " " + tConvert(hour))
+        } else {
+          
+          setClosestApnt("No hay citas")
+        }
+        
+        appointments.content.map(apnt => {
+          appointmentsUser.push({
+            color:'#98EFD3',
+            start: apnt.start_date_time,
+            end: apnt.end_date_time,
+            title: apnt.service,
+          })
+        })
+        setAllApnt(appointmentsUser)
+      }
+    }
+
+    const  tConvert = (time) => {
+      time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+    
+      if (time.length > 1) { 
+        time = time.slice (1); 
+        time[5] = +time[0] < 12 ? ' AM' : ' PM'; 
+        time[0] = +time[0] % 12 || 12;
+      }
+      
+      return time.join (''); 
+      
+    }
 
     useEffect(() => {
         getDate()
-
+        getAppointments()
     }, [])
 
     return (
@@ -99,9 +168,10 @@ const Appointment = ({navigation}) => {
                     <Input style={{
                     margin: 10,
                     width: 250
-                    }} placeholder="2 feb 2022 a las 12:30 AM" editable={false}></Input>
+                    }} placeholder={closestApnt} editable={false}></Input>
                     <IconButton style={{backgroundColor: '#EB4840'}}
                     icon={<Trash height="35" width="35" color='#fff'/>}
+                    disabled={nearDate ? false : true}
                     onPress={() => popup.show({
                       type: 'confirm',
                       bodyComponent: () => bodyComponent({popup}),
@@ -114,7 +184,7 @@ const Appointment = ({navigation}) => {
               </View>
               <View style={styles.module_calendar}>
                 <EventCalendar
-                    events={events}
+                    events={allApnt}
                     width={width}
                     initDate={yourDate.toLocaleDateString().split('T')[0]}
                 />
@@ -136,7 +206,8 @@ const styles = StyleSheet.create({
         margin: 20,
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingBottom: 400,
     },
 
     text_indication: {
