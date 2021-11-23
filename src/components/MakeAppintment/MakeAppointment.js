@@ -97,18 +97,17 @@ const MakeAppointment = ({navigation, route}) => {
     }
 
     const getHours = async () => {
+      let hours = []
       let response = await appointment_api.getAvailableHrs(token, appointment)
-      console.log(response)
       if(response.status === "OK"){
        response.content.map((hour, index) => {
         let newHour = {
           id: hour,
           value: tConvert(hour) + " - " + addMinutes(hour, slctService.duration)
-          
          }
-
-         setHours(prevState => [...prevState, newHour])
+          hours.push(newHour)
        })
+       setHours(hours)
       }
     }
 

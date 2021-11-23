@@ -73,7 +73,7 @@ const Appointment = ({navigation, route}) => {
         CAMBIAR ESTO PABLO NO SE TE VAYA A OLVIDAR
       */
       const appointments = await appointment_api.getAppointmentsUser(userToken, {id: 2})
-      if(appointments.status === "OK"){     
+      if(appointments.status === "OK" && appointments.content.length > 0){     
 
         //Getting the closest appointment
         let closest = appointments.content.sort(function(a, b) {
@@ -108,6 +108,8 @@ const Appointment = ({navigation, route}) => {
           })
         })
         setAllApnt(appointmentsUser)
+      } else {
+        setClosestApnt("No hay citas")  
       }
     }
 
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingBottom: 400,
+        paddingBottom: 200,
     },
 
     text_indication: {
