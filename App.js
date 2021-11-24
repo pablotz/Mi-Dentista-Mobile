@@ -27,8 +27,7 @@ import Appointment from './src/components/Appointment/Appointment';
 import SelectService from './src/components/SelectService/SelectService';
 import Toast from "react-native-fast-toast";
 import { Root } from 'react-native-popup-confirm-toast'
-
-
+import ChangeUserData from './src/components/ChangeUserData/ChangeUserData';
 
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +40,7 @@ const AuthStack = () => {
     <Stack.Screen name="History" component={History} />
     <Stack.Screen name="makeAppointment" component={MakeAppointment} />
     <Stack.Screen name="selectService" component={SelectService} />
+    <Stack.Screen name="ChangeData" component={ChangeUserData} />
   </Stack.Navigator>)
 }
 
@@ -76,11 +76,12 @@ export default function App() {
       }
 
       let response = await Singup_user.login(user)
-      
+      console.log(response)
       if(response.status === true){
         try {
           userToken = response.token;
           await AscyncStorage.setItem('userToken', response.token);
+          await AscyncStorage.setItem('userData', JSON.stringify(response.user_data));
         } catch (e) {
           console.log(e);
         }

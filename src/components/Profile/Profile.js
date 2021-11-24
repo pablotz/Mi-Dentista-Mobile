@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import ButtonRed from '../Atoms/Button_red';
 import ButtonSmall from '../Atoms/Button_small';
 import { AuthContext } from '../Context/context';
@@ -8,17 +8,37 @@ import ButtonTextIconBg from '../Atoms/ButtonIconTextBg/IconTextButtonBg';
 import {
     Doctor
 } from '../Atoms/Icons';
+import AscyncStorage from '@react-native-community/async-storage';
 
 const Profile = ({navigation}) => {
+
+    const [user, setUser] = useState(null);
+
+    const getUser = async () => {
+        let user;
+        user = await AscyncStorage.getItem('userData');
+        if(user){
+            setUser(JSON.parse(user));
+        }
+    }
+
+    useEffect(() => {
+        getUser();
+    }, [])
 
     const { signOut } = useContext(AuthContext);
 
     return (
         <View>
+            {
+                user ?
             <View style={styles.userInfo}>
-                <Typography bold={true} size={25}>¡Hola, Pablo Hernández Castillo!</Typography>
-                <Typography bold={false} size={25}>correo: pablotroll100@gmail.com</Typography>
+                <Typography bold={true} size={25}>¡Hola, {`${user.user_name} ${user.last_name}`}!</Typography>
+                <Typography bold={false} size={25}>correo: {user.email} </Typography>
             </View>
+            :
+            null
+            }
             <View style={styles.btnBills}>
                 <ButtonTextIconBg title={'open'} onPress={
                 () =>  navigation.navigate('History')
@@ -29,7 +49,7 @@ const Profile = ({navigation}) => {
                 </ButtonTextIconBg>
             </View>
             <View style={styles.btnLogout}>
-                <ButtonSmall>Cambiar contraseña</ButtonSmall>
+                <ButtonSmall onPress = {() => navigation.navigate("ChangeData")}>Cambiar datos</ButtonSmall>
                 <ButtonRed onPress={() => signOut()}>Cerrar sesión</ButtonRed>
             </View>
         </View>

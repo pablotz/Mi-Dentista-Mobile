@@ -20,6 +20,7 @@ const Appointment = ({navigation, route}) => {
     const [allApnt, setAllApnt] = useState([])
     const [closestApnt, setClosestApnt] = useState(null)
     const [nearDate, setNearDate] = useState(null)
+    const [user, setUser] = useState(null)
 
     const getDate = () => {
         var meses = new Array ("ene.","feb.","mar.","abr.","may.","jun.","jul.","ago.","sep.","oct.","nov.","dic.");
@@ -63,23 +64,23 @@ const Appointment = ({navigation, route}) => {
 
     const getAppointments = async () => {
       let userToken
+      let user
       let today = new Date()
       let appointmentsUser = []
 
       userToken = await AscyncStorage.getItem('userToken');
+      user = await AscyncStorage.getItem('userData');
+
+      setUser(JSON.parse(user))
       setToken(userToken)
 
-      /*
-        CAMBIAR ESTO PABLO NO SE TE VAYA A OLVIDAR
-      */
-      const appointments = await appointment_api.getAppointmentsUser(userToken, {id: 2})
+      const appointments = await appointment_api.getAppointmentsUser(userToken, {id: user.id})
+      
       if(appointments.status === "OK" && appointments.content.length > 0){     
-
-        //Getting the closest appointment
         let closest = appointments.content.sort(function(a, b) {
           var distancea = Math.abs(today - Date.parse(a.start_date_time));
           var distanceb = Math.abs(today - Date.parse(b.start_date_time));
-          return distancea - distanceb; // sort a before b when the distance is smaller
+          return distancea - distanceb; 
       });
       
 
@@ -104,7 +105,7 @@ const Appointment = ({navigation, route}) => {
             color:'#98EFD3',
             start: apnt.start_date_time,
             end: apnt.end_date_time,
-            title: apnt.service,
+            title: apnt.service.name,
           })
         })
         setAllApnt(appointmentsUser)

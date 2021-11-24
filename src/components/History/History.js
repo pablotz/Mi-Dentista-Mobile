@@ -16,92 +16,30 @@ import Loading from '../Atoms/Loading/Loading';
 
 const History = ({navigation}) => {
 
-  
-    const dummyData = [
-        {
-            id: 1,
-            name: 'Limpieza bucal',
-            price: '$100',
-            duration: 60,
-            date: '12/12/2020',
-        },
-        {
-            id: 2,
-            name: 'Extracción dental',
-            price: '$200',
-            duration: 30,
-            date: '12/12/2020',
-        },
-        {
-            id: 3,
-            name: 'Aplicación de resina',
-            price: '$300',
-            duration: 90,
-            date: '12/12/2020',
-        },
-        {
-            id: 4,
-            name: 'Service 4',
-            price: '$400',
-            duration: 120,
-            date: '12/12/2020',
-        },
-        {
-            id: 5,
-            name: 'Service 5',
-            price: '$500',
-            duration: 35,
-            date: '12/12/2020',
-        },
-        {
-            id: 6,
-            name: 'Service 6',
-            price: '$600',
-            duration: 35,
-            date: '12/12/2020',
-        },
-        {
-            id: 7,
-            name: 'Service 7',
-            price: '$700',
-            duration: 45,
-            date: '12/12/2020',
-        },
-        {
-            id: 8,
-            name: 'Service 8',
-            price: '$200',
-            duration: 55,
-            date: '12/12/2020',
-        },
-        {
-            id: 9,
-            name: 'Service 9',
-            price: '$150',
-            duration: 160,
-            date: '12/12/2020',
-        }
-        
-    ]
 
     const [history, setHistory] = useState(null)
     const [token, setToken] = useState('')
+    const [user, setUser] = useState(null)
 
     const getAppointments = async () => {
       let userToken
+      let user
       let appointmentsUser = []
 
       var meses = new Array ("ene.","feb.","mar.","abr.","may.","jun.","jul.","ago.","sep.","oct.","nov.","dic.");
 
       userToken = await AscyncStorage.getItem('userToken');
+      user = await AscyncStorage.getItem('userData');
+      setUser(JSON.parse(user))
       setToken(userToken)
 
       /*
         CAMBIAR ESTO PABLO NO SE TE VAYA A OLVIDAR
       */
+
+      
       const appointments = await appointment_api.getAppointmentsUser(userToken, {id: 2})
       if(appointments.status === "OK"){     
-        console.log(appointments)
         appointments.content.map(apnt => {
 
                     
@@ -112,9 +50,9 @@ const History = ({navigation}) => {
 
           appointmentsUser.push({
             id: apnt.id,
-            name: apnt.service,
-            price: '$100',
-            duration: 60,
+            name: apnt.service.name,
+            price: apnt.service.price,
+            duration: apnt.service.duration,
             date: date.getDate() + " de " + meses[date.getMonth()] + " de " + date.getFullYear() + " " + tConvert(hour)
           })
         })
@@ -157,16 +95,20 @@ const History = ({navigation}) => {
              history ? 
              <SafeAreaView style={styles.module_main}>
              <ScrollView contentContainerStyle={styles.cards_container}>
-              
               {
-              history.map(item => {
-                  return (
-                      <HistoryItem
-                          navigation={navigation}
-                          dataService={item}
-                      />
-                  )
-              })
+                history.length > 0 ?
+                  
+                  history.map(item => {
+                      return (
+                          <HistoryItem
+                              navigation={navigation}
+                              dataService={item}
+                          />
+                      )
+                  })
+                  
+                :
+                <Typography size={20} bold={false}> No tienes historial de citas </Typography>
               }
             </ScrollView>
             </SafeAreaView>   
@@ -184,32 +126,32 @@ const History = ({navigation}) => {
 const styles = StyleSheet.create({
 
 
-    container: {
-      flex: 1,
-      margin: 20,
-    },
+  container: {
+    flex: 1,
+    margin: 20,
+  },
 
-    containerNew: {
-      flex: 1,
-      margin: 20,
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-    },
+  containerNew: {
+    flex: 1,
+    margin: 20,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
 
-    module_main: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      marginTop: 10,
-      paddingBottom: 60,
-    },
+  module_main: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    marginTop: 10,
+    paddingBottom: 60,
+  },
 
-    text_indication: {
-      display: 'flex',
-      alignSelf: 'flex-start',
-    },
+  text_indication: {
+    display: 'flex',
+    alignSelf: 'flex-start',
+  },
 
-    cards_container: {
+  cards_container: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       alignItems: 'center',
@@ -224,12 +166,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 
-    header_title_container: {
+  header_title_container: {
     width: '100%',
     flexDirection: 'row',
     paddingLeft: 20,      
     justifyContent: 'flex-start',
-    }, 
+  }, 
 
   });
 

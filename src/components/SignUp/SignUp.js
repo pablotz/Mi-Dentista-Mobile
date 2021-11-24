@@ -21,7 +21,6 @@ const SignUp = ({navigation}) => {
     const [lastName, setLastName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [conPassword, setConPassword] = useState("")
     const [accessCode, setAccessCode] = useState("")
     const [phone, setPhone] = useState("")
     const [terms, setTerms] = useState(false)

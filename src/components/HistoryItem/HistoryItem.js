@@ -18,7 +18,7 @@ const HistoryItem = ({dataService, setSlctService, navigation}) => {
                 <Typography size={25} bold={true}>{name}</Typography>
                 <Typography size={20} bold={false}>Fecha: {date}</Typography>
                 <Typography size={20} bold={false}>Duración: {duration} minutos</Typography>
-                <Typography size={22} bold={false}>Precio: {price}</Typography>
+                <Typography size={22} bold={false}>Precio: ${price} MXN</Typography>
             </View>
     </TouchableHighlight>
     )
