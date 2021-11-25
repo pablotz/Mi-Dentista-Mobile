@@ -9,21 +9,23 @@ import {
     Doctor
 } from '../Atoms/Icons';
 import AscyncStorage from '@react-native-community/async-storage';
+import user_api from '../../service/user';
 
 const Profile = ({navigation}) => {
 
     const [user, setUser] = useState(null);
 
     const getUser = async () => {
-        let user;
-        user = await AscyncStorage.getItem('userData');
-        if(user){
-            setUser(JSON.parse(user));
-        }
+        let userToken = await AscyncStorage.getItem('userToken');
+        let response = await user_api.getUserData(userToken);
+        setUser(response);
     }
 
     useEffect(() => {
         getUser();
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            getUser();
+        });
     }, [])
 
     const { signOut } = useContext(AuthContext);

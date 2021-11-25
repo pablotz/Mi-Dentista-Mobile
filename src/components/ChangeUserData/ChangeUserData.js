@@ -30,10 +30,8 @@ const ChangeUserData = ({navigation}) => {
     const [token, setToken] = useState(null)
 
     const getUserData = async () => {
-       let userToken = await AscyncStorage.getItem('userToken');
-       let userData = await AscyncStorage.getItem('userData');
-
-        let userJs = JSON.parse(userData)
+        let userToken = await AscyncStorage.getItem('userToken');
+        let userJs = await user_api.getUserData(userToken);
 
         setEmail(userJs.email)
         setName(userJs.user_name)
@@ -60,7 +58,12 @@ const ChangeUserData = ({navigation}) => {
                 type: "success",
                 duration: 2500,
                 animationType: "zoom-in"
-              });
+            });
+            setTimeout(() => {
+                navigation.navigate('Tabs', {
+                  reload: true
+                })
+            }, 1500);
         }else{
             toast.current.show("Ocurrio un error al actualizar los datos", {
                 type: "danger",
@@ -71,8 +74,12 @@ const ChangeUserData = ({navigation}) => {
     
     }
 
+
     useEffect(() => {
-        getUserData()
+        getUserData();
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            getUserData();
+        });
     }, [])
 
 

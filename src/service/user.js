@@ -20,5 +20,21 @@ export default class user_api {
          return response;
     }
 
+    static getUserData = async (token) => {
+        let response = fetch(
+            "http://oscarhendrix10.pythonanywhere.com/user/findme", {
+                method: "GET",
+                headers: new Headers({
+                      "Content-Type": "application/json",
+                      "token": token
+                }),
+            }
+        ).then(response => response.json())
+         .catch(err => console.error(err));
+ 
+         return response;
+    }
+
+
 
 }

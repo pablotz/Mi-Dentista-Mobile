@@ -130,6 +130,9 @@ const Appointment = ({navigation, route}) => {
     useEffect(() => {
         getDate()
         getAppointments()
+        const willFocusSubscription = navigation.addListener('focus', () => {
+          getAppointments();
+        });
     }, [])
 
     return (

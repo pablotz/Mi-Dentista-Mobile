@@ -64,6 +64,7 @@ const MakeAppointment = ({navigation, route}) => {
   const [token, setToken] = useState(null)
   const [appointment, setAppointment] = useState({})
   const [hours, setHours] = useState([])
+  const [none, setNone] = useState(false)
 
 
   const {service} = route.params;
@@ -97,17 +98,48 @@ const MakeAppointment = ({navigation, route}) => {
     }
 
     const getHours = async () => {
+      setNone(false)
       let hours = []
+      let today = new Date()
+      let tmpSel = new Date(selectedDate)
+      let time = today.getHours() +":"+ today.getMinutes()
+
       let response = await appointment_api.getAvailableHrs(token, appointment)
       if(response.status === "OK"){
-       response.content.map((hour, index) => {
-        let newHour = {
-          id: hour,
-          value: tConvert(hour) + " - " + addMinutes(hour, slctService.duration)
-         }
-          hours.push(newHour)
-       })
-       setHours(hours)
+      if(tmpSel.getDate()+1 > today.getDate())  {
+        response.content.map((hour, index) => {
+          let newHour = {
+            id: hour,
+            value: tConvert(hour) + " - " + addMinutes(hour, slctService.duration)
+           }
+            hours.push(newHour)
+          
+         })
+
+      } else {
+        let tmpHour = today.getHours() +":"+ today.getMinutes()
+          
+        console.log("Hoy:"+ tmpHour)
+        response.content.map((hour, index) => {
+          console.log(hour)
+          
+          if(tmpHour <= hour){
+            console.log(tmpHour)
+          let newHour = {
+            id: hour,
+            value: tConvert(hour) + " - " + addMinutes(hour, slctService.duration)
+           }
+            hours.push(newHour)
+          }
+         })
+         
+      }
+      if(hours.length === 0){
+        setNone(true)
+      } else {
+        setHours(hours)
+      }
+       
       }
     }
 
@@ -228,6 +260,7 @@ const MakeAppointment = ({navigation, route}) => {
             
             </ButtonTextIcon>
             {
+              !none ?
               selectedDate && slctService && hours ?
               <View style={styles.visibleContainer}>
                 <Typography size={25} bold={false}>
@@ -287,14 +320,16 @@ const MakeAppointment = ({navigation, route}) => {
               alignItems: 'center',
               width: 325,                
             }}>
-
               <Typography style={{...styles.text_indication,color:'#787878'}}
               size={16} bold={false}>              
                 Selecciona los datos de tu cita 
               </Typography>
               <Info height="24" width="24" color='#787878'/>
             </View>
-            
+            : <Typography 
+              style={{marginTop: 70}}
+                size={20} 
+                bold={true}>No hay horas disponibles para tu cita </Typography>
             }
           </View>
             
