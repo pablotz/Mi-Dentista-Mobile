@@ -75,6 +75,21 @@ export default class appointment_api {
          return response;
     }
 
+    static getUnableDates = (token) => {
+        let response = fetch(
+            "http://oscarhendrix10.pythonanywhere.com/unabled_date/get_all", {
+                method: "GET",
+                headers: new Headers({
+                      "Content-Type": "application/json",
+                      "token": token
+                }),
+            }
+        ).then(response => response.json())
+         .catch(err => console.error(err));
+ 
+         return response;
+    }
+
 
     
 }

@@ -35,11 +35,12 @@ const MakeAppointment = ({navigation, route}) => {
 
   const calendarComponent = () => {
     return(
+      
       <View style={styles.calendar} >
       <Typography size={25}bold={false}>
             Fecha de tu cita
       </Typography>
-
+      { disabledDates ? 
       <Calendar 
         current={new Date()}
         disableAllTouchEventsForDisabledDays={true}
@@ -51,6 +52,8 @@ const MakeAppointment = ({navigation, route}) => {
           popup.hide()
         }}
       />
+      : null
+    }
     </View>
     )
   }
@@ -63,11 +66,9 @@ const MakeAppointment = ({navigation, route}) => {
   const [slctTime, setSlctTime] = useState('')
   const [token, setToken] = useState(null)
   const [appointment, setAppointment] = useState({})
-  const [hours, setHours] = useState([])
+  const [hoursSt, setHours] = useState([])
   const [none, setNone] = useState(false)
-
-
-  const {service} = route.params;
+  const [disabledDates, setDisabledDates] = useState(null)
 
   const getDate = () => {
     let date = new Date();
@@ -83,34 +84,57 @@ const MakeAppointment = ({navigation, route}) => {
       setToken(userToken)
     }
     getToken()
+    getUnavailableDates()
   }, [])
 
+  const getUnavailableDates = async () => {
+    let userToken
+    userToken = await AscyncStorage.getItem('userToken');
+    let response = await appointment_api.getUnableDates(userToken)
+
+    if(response.status === "OK"){
+      
+      let unDates = response.content
+      let dates = {}
+      unDates.map(date => {
+        dates[date.date] = {
+          disabled: true
+        }
+      })
+      
+
+      setDisabledDates(dates)
+    }
+  }
 
   useEffect(() => {
+    let service = route.params.service
     if(service){
-    setSlctService(service)
+    setSlctService(route.params.service)
     }
 
     if(service && selectedDate){
     let appointment = {
       date: selectedDate,
-      service: slctService.id,
+      service: service.id,
     }
 
     const getHours = async () => {
       setNone(false)
+      setHours(null)
       let hours = []
       let today = new Date()
       let tmpSel = new Date(selectedDate)
-      let time = today.getHours() +":"+ today.getMinutes()
+
+      tmpSel.setDate(tmpSel.getDate() + 1)
 
       let response = await appointment_api.getAvailableHrs(token, appointment)
       if(response.status === "OK"){
-      if(tmpSel.getDate()+1 > today.getDate())  {
+      if(tmpSel.getTime() > today.getTime())  {
         response.content.map((hour, index) => {
           let newHour = {
             id: hour,
-            value: tConvert(hour) + " - " + addMinutes(hour, slctService.duration)
+            value: tConvert(hour) + " - " + addMinutes(hour, service.duration)
            }
             hours.push(newHour)
           
@@ -118,13 +142,10 @@ const MakeAppointment = ({navigation, route}) => {
 
       } else {
         let tmpHour = today.getHours() +":"+ today.getMinutes()
-          
-        console.log("Hoy:"+ tmpHour)
         response.content.map((hour, index) => {
           console.log(hour)
           
           if(tmpHour <= hour){
-            console.log(tmpHour)
           let newHour = {
             id: hour,
             value: tConvert(hour) + " - " + addMinutes(hour, slctService.duration)
@@ -142,11 +163,11 @@ const MakeAppointment = ({navigation, route}) => {
        
       }
     }
-
+    
     getHours()
   }
   
-}, [service, selectedDate])
+}, [route.params.service, selectedDate])
 
   const  tConvert = (time) => {
   time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
@@ -174,11 +195,6 @@ const MakeAppointment = ({navigation, route}) => {
   const massage = {key: 'massage', color: 'blue', selectedDotColor: 'blue'};
   const workout = {key: 'workout', color: 'green'};
 
-  const disabledDates = {
-    '2021-11-20': {disabled: true},
-    '2021-11-21': {disabled: true},
-    '2021-11-22': {disabled: true}
-  }
 
 
   const addAppointment = () => {
@@ -238,7 +254,7 @@ const MakeAppointment = ({navigation, route}) => {
             }
             
             </ButtonTextIcon>
-
+            
             <ButtonTextIcon title={'open'} onPress={
               () =>  {
                 popup.show({
@@ -252,6 +268,7 @@ const MakeAppointment = ({navigation, route}) => {
             }
              icon={<CalendarPic height="24" width="24" color='#353535'/>}
              >
+
             {
             !selectedDate ? 
               'Selecciona la fecha de tu cita' :
@@ -261,13 +278,13 @@ const MakeAppointment = ({navigation, route}) => {
             </ButtonTextIcon>
             {
               !none ?
-              selectedDate && slctService && hours ?
+              selectedDate && slctService && hoursSt ?
               <View style={styles.visibleContainer}>
                 <Typography size={25} bold={false}>
                   Horario:
                 </Typography>
                 <RNSingleSelect
-                data={hours}
+                data={hoursSt}
                 placeholder={'Selecciona la hora de tu cita'}
                 width={325}
                 menuItemTextStyle={{ fontSize: 18 }}

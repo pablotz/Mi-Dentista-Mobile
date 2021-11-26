@@ -48,8 +48,8 @@ const Appointment = ({navigation, route}) => {
       const response = await appointment_api.cancelAppointment(token, apnt)
 
       if(response.status === "OK") {
-        setNearDate(null)
         getAppointments()
+        setNearDate(null)
         popup.hide()
       }
     }
@@ -76,7 +76,8 @@ const Appointment = ({navigation, route}) => {
 
       const appointments = await appointment_api.getAppointmentsUser(userToken, {id: user.id})
       
-      if(appointments.status === "OK" && appointments.content.length > 0){     
+      if(appointments.status === "OK"){     
+        if(appointments.content.length > 0){
         let closest = appointments.content.sort(function(a, b) {
           var distancea = Math.abs(today - Date.parse(a.start_date_time));
           var distanceb = Math.abs(today - Date.parse(b.start_date_time));
@@ -95,10 +96,10 @@ const Appointment = ({navigation, route}) => {
           
           setNearDate(closest[0])
           setClosestApnt(closeDate.getDate() + " de " + meses[closeDate.getMonth()] + " de " + closeDate.getFullYear() + " " + tConvert(hour))
-        } else {
-          
-          setClosestApnt("No hay citas")
         }
+      } else {
+        setClosestApnt("No hay citas")
+      }
         
         appointments.content.map(apnt => {
           appointmentsUser.push({
@@ -108,6 +109,7 @@ const Appointment = ({navigation, route}) => {
             title: apnt.service.name,
           })
         })
+        console.log(appointmentsUser)
         setAllApnt(appointmentsUser)
       } else {
         setClosestApnt("No hay citas")  

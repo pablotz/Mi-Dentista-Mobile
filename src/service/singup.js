@@ -14,7 +14,7 @@ export default class Signup_user {
                 password: usuario.password,
                 access_code: usuario.accessCode,
                 phone: usuario.phone,
-                role: 'customer'
+                role: 'Customer'
             }),
            }
        ).then(response => response.json())
