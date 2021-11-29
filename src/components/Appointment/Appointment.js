@@ -74,7 +74,7 @@ const Appointment = ({navigation, route}) => {
       setUser(JSON.parse(user))
       setToken(userToken)
 
-      const appointments = await appointment_api.getAppointmentsUser(userToken, {id: user.id})
+      const appointments = await appointment_api.getAppointmentsUser(userToken)
       
       if(appointments.status === "OK"){     
         if(appointments.content.length > 0){

@@ -46,9 +46,7 @@ export default class appointment_api {
                       "Content-Type": "application/json",
                       "token": token
                 }),
-                body: JSON.stringify({
-                    id: user.id
-                }),
+                body: JSON.stringify({}),
             }
         ).then(response => response.json())
          .catch(err => console.error(err));

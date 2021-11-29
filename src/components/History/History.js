@@ -32,13 +32,8 @@ const History = ({navigation}) => {
       user = await AscyncStorage.getItem('userData');
       setUser(JSON.parse(user))
       setToken(userToken)
-
-      /*
-        CAMBIAR ESTO PABLO NO SE TE VAYA A OLVIDAR
-      */
-
       
-      const appointments = await appointment_api.getAppointmentsUser(userToken, {id: 2})
+      const appointments = await appointment_api.getAppointmentsUser(userToken)
       if(appointments.status === "OK"){     
         appointments.content.map(apnt => {
 
