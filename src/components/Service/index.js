@@ -20,6 +20,10 @@ const Service = ({navigation}) => {
         userToken = await AscyncStorage.getItem('userToken');
         
         let response = await service_api.getService(userToken)
+
+        response = response.filter(item =>  item.estatus == 1 )
+        
+        console.log(response)
         setBackList(response)
         setServiceList(response)
       }
